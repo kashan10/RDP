@@ -53,6 +53,14 @@ use auxiliary/scanner/smb/smb_enumshares
 use auxiliary/scanner/smb/smb_login 
 use auxiliary/scanner/smb/pipe_auditor 
 
+FTP To download resources from FTP service we can use following commands: 
+ftp <target_IP> #connect to FTP service 
+# if you've not credentials, first try anonymous login writing as user: anonymous and leave blank psw, or brute force credentials using hydra (see section). 
+Prompt OFF #deactive prompt 
+mode binary #active binary mode 
+mget * #dump all file 
+bye #exit 
+
 ## set options depends on the selected module 
 set PASS_FILE /usr/share/wordlists/metasploit/unix_passwords.txt 
 set SMBUser <USER> 
